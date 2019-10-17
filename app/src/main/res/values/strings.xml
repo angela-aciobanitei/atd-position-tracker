@@ -1,3 +1,35 @@
 <resources>
-    <string name="app_name">PositionTracker</string>
+    <string name="app_name">Position Tracker</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="permission_rationale">Location permission is needed for core functionality</string>
+    <string name="permission_denied_explanation">Permission was denied, but is needed for core functionality.</string>
+    <string name="settings">Settings</string>
+    <string name="ok">OK</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_position_tracking_key">position_tracking_key</string>
+    <string name="pref_position_tracking_title">Enable Position Tracking</string>
+    <string name="pref_position_tracking_summary">Periodic position tracking</string>
+    <string name="date_range_dialog_title">Choose Date Range</string>
+    <string name="date_range_dialog_start_date_hint">Start Date</string>
+    <string name="date_range_dialog_end_date_hint">End Date</string>
+    <string name="date_range_dialog_cancel_btn_text">Cancel</string>
+    <string name="date_range_dialog_set_btn_text">OK</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
 </resources>
