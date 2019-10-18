@@ -1,4 +1,4 @@
-package com.ang.acb.positiontracker.utils;
+package com.ang.acb.positiontracker.viewmodel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;

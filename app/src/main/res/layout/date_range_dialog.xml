@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        style="@style/dateRangeDialogTitleStyle"
+        android:text="@string/date_range_dialog_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="32dp">
+
+        <EditText
+            android:id="@+id/start_date"
+            style="@style/dateRangeDialogEditTextStyle"
+            android:hint="@string/date_range_dialog_start_date_hint"
+            android:layout_marginEnd="8dp"
+            android:importantForAutofill="no" />
+
+        <EditText
+            android:id="@+id/end_date"
+            style="@style/dateRangeDialogEditTextStyle"
+            android:hint="@string/date_range_dialog_end_date_hint"
+            android:layout_marginStart="8dp"
+            android:importantForAutofill="no" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp">
+
+        <Button
+            android:id="@+id/cancel"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:text="@string/date_range_dialog_cancel_btn_text"
+            android:layout_toStartOf="@+id/set"/>
+
+        <Button
+            android:id="@+id/set"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            android:text="@string/date_range_dialog_set_btn_text"
+            android:layout_alignParentEnd="true"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,4 +1,4 @@
-package com.ang.acb.positiontracker.utils;
+package com.ang.acb.positiontracker.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
