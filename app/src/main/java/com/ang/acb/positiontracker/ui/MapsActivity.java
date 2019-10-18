@@ -305,7 +305,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // Enable zoom controls. These are disabled by default.
         map.getUiSettings().setZoomControlsEnabled(true);
-        
+
+        // Style the map.
+        addMapStyle(map);
 
         // If the user has not selected a date range to filter locations by
         // (i.e. start date and end date values are still the default values of 0L),
@@ -323,6 +325,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addCustomInfoWidow(map);
     }
 
+    private void addMapStyle(GoogleMap googleMap) {
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            boolean success = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                    this, R.raw.style_json));
+            if (!success) Log.e(LOG_TAG, "Style parsing failed.");
+        } catch (Resources.NotFoundException e) {
+            Log.e(LOG_TAG, "Can't find style. Error: ", e);
+        }
+    }
 
     private void addMarkers(GoogleMap googleMap, @NonNull List<LocationEntry> locations) {
         // Used to define latitude-longitude bounds.
