@@ -262,11 +262,128 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(new Intent(MapsActivity.this, SettingsActivity.class));
                 return true;
             case R.id.action_select_date_range:
-
+                selectDateRange();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void selectDateRange() {
+        // Create calender object to set member variables year, month, day
+        final Calendar calendar = Calendar.getInstance();
+        currentYear = calendar.get(Calendar.YEAR);
+        currentMonth = calendar.get(Calendar.MONTH);
+        currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Create date range dialog
+        final Dialog dateRangeDialog = new Dialog(MapsActivity.this);
+        dateRangeDialog.setContentView(R.layout.date_range_dialog);
+
+        handlePickingStartDate(calendar, dateRangeDialog);
+        handlePickingEndDate(calendar, dateRangeDialog);
+
+        // Handle Cancel button function
+        Button cancel = dateRangeDialog.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Exit dialog
+                dateRangeDialog.cancel();
+            }
+        });
+
+        // Handle Set button function
+        Button set = dateRangeDialog.findViewById(R.id.set);
+        set.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // FIXME The map updates only if app is closed and opened again
+                // setupMapFragment();
+                // initFilteredLocationList(startDateLong, endDateLong);
+                dateRangeDialog.dismiss();
+            }
+        });
+
+        // Show the date range picker dialog
+        dateRangeDialog.show();
+    }
+
+    private void handlePickingStartDate(final Calendar calendar, Dialog dateRangeDialog) {
+        // Handle picking start date
+        startDateEditText = dateRangeDialog.findViewById(R.id.start_date);
+        startDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePickerDialog = new DatePickerDialog(MapsActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // Set year, month, day member variables
+                                calendar.set(Calendar.YEAR, datePicker.getYear());
+                                calendar.set(Calendar.MONTH, datePicker.getMonth());
+                                calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+
+                                // Convert start date to milliseconds since 1/1/1970
+                                startDateLong = calendar.getTimeInMillis();
+                                datesPreferences.edit()
+                                        .putLong(KEY_START_DATE_LONG, startDateLong)
+                                        .apply();
+
+                                // Format start date and save it in SharedPreferences.
+                                startDateFormatted = dateFormat.format(new Date(startDateLong));
+                                datesPreferences.edit()
+                                        .putString(KEY_START_DATE_FORMATTED, startDateFormatted)
+                                        .apply();
+
+                                startDateEditText.setText(startDateFormatted);
+                            }
+                        }, currentYear, currentMonth, currentDay);
+                datePickerDialog.show();
+            }
+        });
+
+        startDateEditText.setText(datesPreferences.getString(KEY_START_DATE_FORMATTED, ""));
+    }
+
+    private void handlePickingEndDate(final Calendar calendar, Dialog dateRangeDialog) {
+        // Handle picking end date
+        endDateEditText = dateRangeDialog.findViewById(R.id.end_date);
+        endDateEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                datePickerDialog = new DatePickerDialog(MapsActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year,
+                                                  int monthOfYear, int dayOfMonth) {
+                                // Set year, month, day member variables
+                                calendar.set(Calendar.YEAR, datePicker.getYear());
+                                calendar.set(Calendar.MONTH, datePicker.getMonth());
+                                calendar.set(Calendar.DAY_OF_MONTH, datePicker.getDayOfMonth());
+
+                                // Convert date to dateLong in milliseconds since 1/1/1970.
+                                endDateLong = calendar.getTimeInMillis();
+                                datesPreferences.edit()
+                                        .putLong(KEY_END_DATE_LONG, endDateLong)
+                                        .apply();
+
+                                // Format dateLong to string representation of date
+                                endDateFormatted = dateFormat.format(new Date(endDateLong));
+                                datesPreferences.edit()
+                                        .putString(KEY_END_DATE_FORMATTED, endDateFormatted)
+                                        .apply();
+
+                                // Set dateFormatted to date picker dialog dateEditText
+                                endDateEditText.setText(endDateFormatted);
+                            }
+                        }, currentYear, currentMonth, currentDay);
+                datePickerDialog.show();
+            }
+        });
+
+        endDateEditText.setText(datesPreferences.getString(KEY_END_DATE_FORMATTED, null));
     }
 
     private void setupMapFragment() {
@@ -281,6 +398,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         viewModel = ViewModelProviders.of(MapsActivity.this, viewModelFactory)
                 .get(LocationViewModel.class);
+    }
+
+    private void initFilteredLocationList(long from, long to) {
+        viewModel.getLocationsBetweenDates(new Date(from), new Date(to))
+                .observe(MapsActivity.this, new Observer<List<LocationEntry>>() {
+                    @Override
+                    public void onChanged(@Nullable List<LocationEntry> locations) {
+                        if(locations != null && locations.size() > 0) {
+                            map.clear();
+                            addMarkers(map, locations);
+                        }
+                    }
+                });
     }
 
     private void initAllLocationsList() {
@@ -317,7 +447,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if(startDate == 0L || endDate == 0L) {
             initAllLocationsList();
         } else {
-            //initFilteredLocationList(startDate, endDate);
+            initFilteredLocationList(startDate, endDate);
         }
 
         // Create custom info windows for every marker (to display information
